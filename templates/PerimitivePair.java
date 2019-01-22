@@ -18,9 +18,15 @@
 package me.duncte123.primitivepairs;
 
 /**
- * THIS CLASS IS AUTO GENERATED, DO NOT HAND EDIT
+ * Provides a container for the %1$s and the %2$s primitives
+ *
+ * @author duncte123
  */
 public class %3$s {
+
+    /**
+     * THIS CLASS IS AUTO GENERATED, DO NOT HAND EDIT
+     */
 
     private %1$s left;
     private %2$s right;
