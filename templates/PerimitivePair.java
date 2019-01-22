@@ -92,4 +92,21 @@ public class %3$s {
         this.right = right;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "%3$s{left=" + getLeft() + ", right=" + getRight() + '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (!(obj instanceof %3$s)) {
+            return false;
+        }
+
+        %3$s other = (%3$s) obj;
+
+        return this.getLeft() == other.getLeft() && this.getRight() == other.getRight();
+    }
 }
