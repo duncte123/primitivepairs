@@ -24,7 +24,7 @@ plugins {
 
 group 'me.duncte123'
 archivesBaseName = 'primitivepairs'
-version '1.0.0'
+version '1.1.0'
 
 def javaVersion = JavaVersion.VERSION_1_8
 
@@ -54,7 +54,10 @@ task generateTemplates {
     primitives.size().times {
         for (def i = 0; i < primitives.size(); i++) {
 
-            def clsName = "${current.capitalize()}${primitives[i].capitalize()}Pair"
+            def left = current.capitalize()
+            def right = primitives[i].capitalize() as String
+            def typeName = left == right ? left : left + right
+            def clsName = "${typeName}Pair"
             def clsContent = String.format(template, current, primitives[i], clsName)
             def clsFile = new File("src/main/java/me/duncte123/primitivepairs/${clsName}.java")
             
