@@ -2,7 +2,7 @@
 [download]: https://bintray.com/duncte123/maven/primitivepairs/_latestVersion
 [travisBadge]: https://travis-ci.org/duncte123/primitivepairs.svg?branch=master
 [travisLink]: https://travis-ci.org/duncte123/primitivepairs
-[javaDocs]: https://jitpack.io/com/github/duncte123/primitivepairs/master-SNAPSHOT/javadoc/
+[javaDocs]: https://jitpack.io/com/github/duncte123/primitivepairs/-SNAPSHOT/javadoc/
 
 # Primitive Pairs for java [![Build Status][travisBadge]][travisLink]
 A simple and lightweight library for storing primitives in pairs
