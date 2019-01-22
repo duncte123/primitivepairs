@@ -1,0 +1,132 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'idea'
+    id 'com.jfrog.bintray' version '1.8.4'
+}
+
+group 'me.duncte123'
+archivesBaseName = 'primitivepairs'
+version '1.0.0'
+
+def javaVersion = JavaVersion.VERSION_1_8
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10.3'
+}
+
+def primitives = [
+    'boolean',
+    'byte',
+    'char',
+    'double',
+    'float',
+    'int',
+    'long',
+]
+
+task generateTemplates {
+    
+    def pIndex = 0
+    def current = 'boolean'
+    def template = new File('templates/PerimitivePair.java').text
+
+    primitives.size().times {
+        for (def i = 0; i < primitives.size(); i++) {
+
+            def clsName = "${current.capitalize()}${primitives[i].capitalize()}Pair"
+            def clsContent = String.format(template, current, primitives[i], clsName)
+            def clsFile = new File("src/main/java/me/duncte123/primitivepairs/${clsName}.java")
+            
+            clsFile.write(clsContent)
+            
+            if (i == primitives.size() - 1) {
+                pIndex++
+                current = primitives[pIndex]
+            }
+        }
+    }
+}
+
+javadoc {
+    failOnError = false
+    options.memberLevel = JavadocMemberLevel.PUBLIC
+    options.author()
+    options.encoding = 'UTF-8'
+    options.addStringOption('-html5')
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.output
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    pkg {
+        repo = 'maven'
+        name = 'primitivepairs'
+        licenses = ['Apache-2.0']
+        publications = ['BintrayUpload']
+        vcsUrl = 'https://github.com/duncte123/primitivepairs.git'
+        publish = true
+        version {
+            name = project.version
+            released = new Date()
+        }
+    }
+}
+
+publishing {
+    publications {
+        BintrayUpload(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId archivesBaseName
+            version version
+            artifact javadocJar
+            artifact sourcesJar
+        }
+    }
+}
+
+
+build {
+    dependsOn generateTemplates
+    
+    dependsOn clean
+    dependsOn jar
+    dependsOn javadocJar
+    dependsOn sourcesJar
+    dependsOn publish
+
+    jar.mustRunAfter clean
+    javadocJar.mustRunAfter jar
+    sourcesJar.mustRunAfter javadocJar
+    publish.mustRunAfter sourcesJar
+}
+
+bintrayUpload {
+    dependsOn build
+
+    onlyIf { System.getenv('BINTRAY_USER') != null }
+    onlyIf { System.getenv('BINTRAY_KEY') != null }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
